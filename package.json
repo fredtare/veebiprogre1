@@ -1,0 +1,29 @@
+{
+  "name": "veebiprogre1",
+  "version": "0.0.1",
+  "description": "Veebiprogrameerimise kursuse express.js projekt",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://fredtare@github.com/fredtare/veebiprogre1.git"
+  },
+  "keywords": [
+    "veebiprogrameerimine",
+    "if24",
+    "fredtare",
+    "tlu",
+    "express.js"
+  ],
+  "author": "fredi tarenõmm",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fredtare/veebiprogre1/issues"
+  },
+  "homepage": "https://github.com/fredtare/veebiprogre1#readme",
+  "dependencies": {
+    "express": "~4.16.1"
+  }
+}
