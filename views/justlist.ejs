@@ -22,14 +22,13 @@
       <hr>
       <ul>
         <li><a href="/">Avaleht</a></li>
-        <li>nadalapaev: <%= weekdayCurrent %>
-        </li>
-        <li>kuupaev <%= dateCurrent %>
-        </li>
-        <li>kellaaeg <%= timeCurrent %>
-        </li>
-        <li>Fredi Teeb <%= dayPartCurrent %>
-        </li>
+      </ul>
+      <hr>
+      <h2><%= h2%></h2>
+      <ul>
+        <% listData.forEach(function(wisdomPhrase){ %>
+          <li><%= wisdomPhrase %></li>
+        <% }); %>
       </ul>
 
 </html>

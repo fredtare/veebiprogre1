@@ -20,16 +20,15 @@
       <p>See leht on loodud ÃµppetÃ¶Ã¶ raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ãœlikoolis</a>,
         Digitehnoloogiate instituudis ja ei sisalda tÃµsiselt vÃµetavat materjali.</p>
       <hr>
-      <ul>
-        <li><a href="/">Avaleht</a></li>
-        <li>nadalapaev: <%= weekdayCurrent %>
-        </li>
-        <li>kuupaev <%= dateCurrent %>
-        </li>
-        <li>kellaaeg <%= timeCurrent %>
-        </li>
-        <li>Fredi Teeb <%= dayPartCurrent %>
-        </li>
-      </ul>
-
+      <h2> pane oma nimi kirja!</h2>
+      <form method="POST"> <!--teeme formi millega saame kasutajad spinoneerida. Meetod post peidab vormi sisu ara URList ja lubab saata suuremaid faile-->
+        <label for="firstNameInput">Eesnimi:</label>
+        <input type="text" id="firstNameInput" name="firstNameInput" placeholder ="eesnimi...">
+        <br>
+        <label for="lastNameInput">Jarelnimi:</label>
+        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="perenimi...">
+        <br>
+        <input type="submit" id="regSubmit" name="regSubmit" value="salvesta">
+      </form>
+      </body>
 </html>
