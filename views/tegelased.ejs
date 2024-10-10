@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#d8d1ab;">
+    <center>
+      <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
+      <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
+      <img src="banner/cat2.gif" alt="parem turva">
+      <br>
+      <h1> filmimaailm </h1>
+      <hr>
+
+    </center>
+    <ul>
+      <li><a href="/">Avaleht</a></li>
+      <li><a href="/eestifilm">Filmi Avaleht!</a></li>
+    </ul>
+    <hr>
+
+    <h2>Eesti Filmi Tegelased</h2>
+    <% persons.forEach(function(item){ %>
+      <li><%= item.first_name %> <%= item.last_name%>, syndinud <%= item.birth_date%></li>
+      <% }); %>
+
+
+  </body>
+
+</html>

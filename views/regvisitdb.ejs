@@ -16,29 +16,32 @@
       <img src="banner/cat2.gif" alt="parem turva">
       <br>
       <img src="images/welcome.gif" alt="teretulemast saidile">
-      <h1>Tere</h1>
+      <h1>TeRegistreeri end ANDMEBAASI!!!! </h1>
       <p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
         Digitehnoloogiate instituudis ja ei sisalda tõsiselt võetavat materjali.</p>
 
       <hr>
 
-      </center>
-      <ul>
-        <li><a href="/">Avaleht</a></li>
-        <li><a href="/visitlog">Külaliste raamat!</a></li>
-      </ul>
-      <center>
+    </center>
+    <ul>
+      <li><a href="/">Avaleht</a></li>
+      <li><a href="/visitlog">Külaliste raamat!</a></li>
+    </ul>
+    <center>
 
       <h2> Pane oma nimi kirja!</h2>
-      <form method="POST"> <!--teeme formi millega saame kasutajad spinoneerida. Meetod post peidab vormi sisu ara URList ja lubab saata suuremaid faile-->
+      <form method="POST">
+        <!--teeme formi millega saame kasutajad spinoneerida. Meetod post peidab vormi sisu ara URList ja lubab saata suuremaid faile-->
         <label for="firstNameInput">Eesnimi:</label>
-        <input type="text" id="firstNameInput" name="firstNameInput" placeholder ="eesnimi...">
+        <input type="text" id="firstNameInput" name="firstNameInput" placeholder="eesnimi..." value="<%= firstNameTemp %>">
         <br>
         <label for="lastNameInput">Jarelnimi:</label>
-        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="perenimi...">
+        <input type="text" id="lastNameInput" name="lastNameInput" placeholder="perenimi..." value="<%= lastNameTemp %>">
         <br>
         <input type="submit" id="regSubmit" name="regSubmit" value="salvesta">
       </form>
-      </center>
-      </body>
+      <p><%= notice %></p>
+    </center>
+  </body>
+
 </html>

@@ -9,32 +9,29 @@
 
 <body>
 
-  <body style="background-color:#d9f1b1;">
+  <body style="background-color:#c59fa2;">
     <center>
       <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
       <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
       <img src="banner/cat2.gif" alt="parem turva">
       <br>
       <img src="images/welcome.gif" alt="teretulemast saidile">
-      <h1>Kui sul läks kell katki</h1>
-      <p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
-        Digitehnoloogiate instituudis ja ei sisalda tÃµsiselt võetavat materjali.</p>
+      <h1>Saidil käinud külalised!</h1>
+      <p>See leht on loodud õõppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
+        Digitehnoloogiate instituudis ja ei sisalda tõsiselt võetavat materjali.</p>
+    </center>
       <hr>
-      </center>
       <ul>
         <li><a href="/">Avaleht</a></li>
-      <hr>
-      <center>
-        <li>nadalapaev: <%= weekdayCurrent %>
-        </li>
-        <li>kuupaev <%= dateCurrent %>
-        </li>
-        <li>kellaaeg <%= timeCurrent %>
-        </li>
-        <li>Fredi Teeb <%= dayPartCurrent %>
-        </li>
+        <li><a href="/regvisit">Registreeri ka oma külastus!</a></li>
       </ul>
-    </center>
-    </body>
+      <hr>
+      <h2><%= h2%></h2>
+      <ul>
+        <% listData.forEach(function(guestLog){ %>
+          <li><%= guestLog %></li>  
+        <% }); %>
+      </ul>
+
 
 </html>
