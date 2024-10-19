@@ -16,6 +16,11 @@ const dateEt = function dateEt(){
 	return dateNowEt;
 }
 
+const givenDateFormatted = function(gDate){
+	let specDate = new Date(gDate)
+	return specDate.getDate() + "." + monthNamesEt[specDate.getMonth()] + " " +  specDate.getFullYear();
+}
+
 const weekDayEt = function(){
 	const weekdayNamesEt = ["pühapäev", "esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev"];
 	return weekdayNamesEt[dayNow];
@@ -26,6 +31,25 @@ const timeFormattedEt = function(){
 	return hourNow + ":" + minuteNow + ":" + secondNow;
 }
 
+const timeElapsed = function(gDate){
+	let startDate = new Date (gDate);
+	let today = new Date();
+	let msDiff = today - startDate
+	let daysDiff = Math.round(msDiff / (1000 * 3600 * 24));
+	return daysDiff
+}
+
+const timeUnFormatted = function () {
+	let comparableDate = new Date(timeNow.getUTCFullYear(), timeNow.getUTCMonth(), timeNow.getUTCDate());
+	return comparableDate;
+}
+
+const defaultExpireDate = function () {
+	let expireDate = new Date(timeNow.getUTCFullYear(), timeNow.getUTCMonth(), timeNow.getUTCDate()+10);
+	return expireDate;
+}
+
+//kriba funktsioon mis votab kuupaeva ja ytleb mitu paeva selleni on, kas see on praegu voi sellest on moodas x paeva
 
 
 
@@ -78,4 +102,7 @@ function partOfDay() {
 
 
 
-module.exports = {monthNamesEt: monthNamesEt, weekDayEt: weekDayEt, dateEt: dateEt,  timeFormattedEt: timeFormattedEt, partOfDay: partOfDay};
+module.exports = {
+	monthNamesEt: monthNamesEt, weekDayEt: weekDayEt, dateEt: dateEt, timeFormattedEt: timeFormattedEt, partOfDay: partOfDay, givenDateFormatted: givenDateFormatted, timeElapsed: timeElapsed,
+	timeUnFormatted: timeUnFormatted, defaultExpireDate: defaultExpireDate
+};

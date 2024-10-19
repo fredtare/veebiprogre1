@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#bfcdf5;">
+    <center>
+      <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
+      <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
+      <img src="banner/cat2.gif" alt="parem turva">
+      <br>
+      <img src="images/welcome.gif" alt="teretulemast saidile">
+      <h1>Tere</h1>
+      <p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
+        Digitehnoloogiate instituudis ja ei sisalda tõsiselt võetavat materjali.</p>
+
+      <hr>
+
+      </center>
+      <ul>
+        <li><a href="/">Avaleht</a></li>
+        <li><a href="/news">Uudised!!</a></li>
+      </ul>
+      <center>
+
+      <h2> Lisa Uudis!</h2>
+      <h4><%= notice %></h4>
+      <form method="POST"> <!--teeme formi millega saame kasutajad spinoneerida. Meetod post peidab vormi sisu ara URList ja lubab saata suuremaid faile-->
+        <label for="newsTitleInput">Pealkiri:</label>
+        <input type="text" id="newsTitleInput" name="newsTitleInput" placeholder ="Uudise Pealkiri..." value="<%= newsTitleTemp %>">
+        <br>
+        <label for="newsInput">Uudise Sisu</label>
+        <textarea id="newsInput" name="newsInput" placeholder="Uudise Sisu..." cols="150" rows="5" value="<%= newsTextTemp %>"></textarea>
+        <br>
+        <label for="expireInput">Aegumiskuupaev:</label>
+        <input type="date" id="expireInput" name="expireInput">
+        <br>
+        <input type="submit" id="newsSubmit" name="newsSubmit" value="salvesta">
+      </form>
+      </center>
+      </body>
+</html>

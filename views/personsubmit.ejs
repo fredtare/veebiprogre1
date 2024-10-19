@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#bfcdf5;">
+    <center>
+      <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
+      <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
+      <img src="banner/cat2.gif" alt="parem turva">
+      <br>
+      <img src="images/welcome.gif" alt="teretulemast saidile">
+      <h1>Täiendame filmi andmebaasi </h1>
+      <p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
+        Digitehnoloogiate instituudis ja ei sisalda tõsiselt võetavat materjali.</p>
+
+      <hr>
+
+    </center>
+    <ul>
+      <li><a href="/">Avaleht</a></li>
+      <li><a href="/eestifilm">Eesti Film</a></li>
+    </ul>
+    <center>
+
+      <h2> Siin saab lisada andmeid ametlikku(mitteametlikku) Eesti Filmi andmebaasi!</h2>
+      <form method="POST">
+        <!--teeme formi millega saame kasutajad spinoneerida. Meetod post peidab vormi sisu ara URList ja lubab saata suuremaid faile-->
+        <label for="characterSubmit">Tegelase Nimi</label>
+        <input type="text" id="characterSubmit" name="characterSubmit" placeholder="Filmitegelase Nimi" value="">
+        <input type="submit" id="characterSubmit" name="characterSubmit" value="salvesta">
+        <br>
+        <label for="FilmSubmit">Filmi Nimi:</label>
+        <input type="text" id="filmSubmit" name="FilmSubmit" placeholder="Filmi Nimi" value="">
+        <input type="submit" id="filmSubmit" name="filmSubmit" value="salvesta">
+        <br>
+        <label for="positionSubmit">Positsiooni Nimi:</label>
+        <input type="text" id="positionSubmit" name="positionSubmit" placeholder="Rolli Nimi" value="">
+        <input type="submit" id="positionSubmit" name="positionSubmit" value="salvesta">
+      </form>
+      <p><%= notice %></p>
+    </center>
+  </body>
+
+</html>
