@@ -1,4 +1,5 @@
 const express = require("express");
+
 const dtEt = require("./public/dateTime");
 const fs = require("fs"); //lubab file systeemis ringi kynda
 const app = express();
@@ -6,10 +7,21 @@ const dbInfo = require("../../vp2024config");
 const mysql = require("mysql2");
 //paringu lahtiharutamiseks POST paringute puhul
 const bodyparser = require("body-parser");
+//failide yleslaadimiseks
+const multer = require("multer");
+//pildi suuruste muutmine
+const sharp = require("sharp");
+//crypteerimine
+const bcrypt = require("bcrypt");
+
 
 app.set("view engine", "ejs"); //ejs kaivitub ise aga siin maarame viewengineks ejsi parast expressi appimist
 app.use(express.static("public"));//kaivitada func static expressi alt mis teeb kausta public kattesaadavaks
-app.use(bodyparser.urlencoded({extended: false})); // paringu URLi parsimine false kui ainult tekst true kui muud ka
+app.use(bodyparser.urlencoded({extended: true})); // paringu URLi parsimine false kui ainult tekst true kui muud ka
+
+//seadistame vahevara - multer fotode laadimiseks x kataloogi
+const upload = multer({dest: "./public/gallery/orig/"});
+
 
 //andmebaasiga yhenduse loomines. comad on iga rea taga kuna me paneme eri reale aga tegelt nad on jarjest
 const connectionDatabase = mysql.createConnection({
@@ -25,14 +37,15 @@ const connectionDatabase = mysql.createConnection({
 app.get("/", (req, res) => {
     
     let frontPageNews = [];
+    //let frontPagePhoto = [];
     let sqlRequest = "SELECT news_title, news_text, news_date FROM news WHERE expire_date >= (?) ORDER BY id  DESC LIMIT 1";
+    //let sqlPhotoRequest = "SELECT file_name, alt_text FROM photos WHERE deleted = 0 and privacy = 3 ORDER BY id DESC LIMIT 1";
 
     connectionDatabase.query(sqlRequest, [dtEt.timeUnFormatted()], (err, sqlres) => {
         if (err) {
             throw err;
 
         } else {
-
             for (i = 0; i < sqlres.length; i++) {
                 frontPageNews.push({ newsTitle: sqlres[i].news_title, newsText: sqlres[i].news_text, newsDate: dtEt.givenDateFormatted(sqlres[i].news_date) });
                     res.render("index", { frontPageNews: frontPageNews, timeElapsed: dtEt.timeElapsed("9-2-2024") });
@@ -43,6 +56,110 @@ app.get("/", (req, res) => {
 
 });
 
+app.get("/login" , (req, res) => {
+    let notice = "";
+    res.render("login", {notice:notice});
+});
+
+//esilehe sisselogimine
+app.post("/login", (req,res) =>{
+    let notice = "";
+
+    if (!req.body.emailInput || !req.body.passwordInput) {
+        notice = "Midagi j2i sisestamata!";
+        console.log("v2li jai tyhjaks");
+        res.render("login", {notice: notice});
+
+    } else {
+        let sqlReq = "SELECT id, password FROM users WHERE email = ?";
+        connectionDatabase.execute(sqlReq, [req.body.emailInput], (err, result) =>{
+
+            if (err){
+            console.log("viga andmebaasiga suhtlemisel emaili teel" + err);
+            notice = "tehniline error andmebaasist emaili saamisega";
+            res.render("login", {notice: notice});
+
+            } else {
+                if (result[0] != null) {//kuna saab mitu sama emaili olla siis votab ainult esimese vastuse et katsta nt "@gmail.com" sisselogimise vastu 
+                    bcrypt.compare.compare(req.body.passwordInput, result[0].password, (err, compareResult) =>{
+
+                        if (err) {
+                            notice = "tehniline viga, sisse logida ei saa"
+                            res.render("login", {notice: notice});        
+
+                        } else {  //kas tuli oige v vale parool
+                             if (compareResult) {
+                                notice = "Teretulemast! Olete Sisse Loginud!"
+                                res.render("login", {notice: notice});
+
+                             } else {
+                                notice = "KT ja/voi parool vale!"
+                                res.render("login", {notice: notice});
+                             } //parool happy end
+                        }
+                    }); //parooli kontrolli lopp
+
+                } else {
+                    notice = "KT ja/voi parool vale!"
+                    res.render("login", {notice: notice});
+                } //email bad end
+            }
+        });  //saadame emaili kontrolli
+    } //valjad taidetud lopp
+
+});
+
+//regamise l6bud
+app.get("/register", (req, res)=> {
+    res.render("signup");
+});
+
+app.post("/register", (req, res) =>{
+    
+    let notice = "ootan andmeid"
+    console.log(req.body); //piilume mis see veebisait meile v2lja sylgab
+
+    if(!req.body.firstNameInput || !req.body.lastNameInput || !req.body.birthDateInput || !req.body.genderInput || !req.body.emailInput || !req.body.passwordInput || req.body.passwordInput.lenght < 8 || req.body.passwordInput !== req.body.confirmPasswordInput) {
+       
+        notice = "Osa infot sisestamata v6i parool liiga lyhike v6i paroolid ei kattu v6i kuufaaside ebasobivus teie tegevustega"
+        res.render("signup", {notice: notice});
+        
+    } else {
+
+        notice = "Andmed korras!";
+        //teeme parooli hashi
+        //genereerime soola, parameetrid: 10 astmeline krypt, 
+        bcrypt.genSalt(10, (err, salt)  => {
+
+            if (err) {
+                notice = "tehniline viga parooli soolamisel, kasutajat ei loodud!";
+                res.render("signup", {notice: notice});
+            } else { //nyyd krypteerime. Arvesta et nested callback on vaaaga halb stiil
+
+                bcrypt.hash(req.body.passwordInput, salt, (err, pwdHash) =>{
+                    if (err) {
+                        notice = "tehniline viga parooli hashimisel, kasutaja loomise feil";
+                        res.render("signup", {notice: notice});
+                    } else {
+                   
+                        let sqlAccountRequest = "INSERT INTO users (first_name, last_name, birth_date, gender, email, password) VALUES (?, ?, ?, ?, ?, ?)";
+                        connectionDatabase.execute(sqlAccountRequest, [req.body.firstNameInput, req.body.lastNameInput, req.body.birthDateInput, req.body.genderInput, req.body.emailInput, pwdHash], (err, result) =>{
+
+                            if (err){
+                                console.log(err)
+                                notice = "tehniline viga andmebaasi kirjutamisel";
+                                res.render("signup", {notice: notice});
+                            } else {
+                            notice = "konto " + req.body.emailInput + " loodud!";
+                            res.render("signup", {notice: notice});
+                            }
+                        }); //.execute() testib andmebaasi yhendust ja kas see kask yldse eksisteerib ja siis laseb k2iku
+                    }
+                }); //hashi lopp
+            }
+        }); //gensalt loppeb
+    }
+});
 
 //teeme timenow alalehe
 app.get("/timenow", (req, res)=> {
@@ -264,8 +381,7 @@ app.post("/news/addnews", (req, res) => {
 
 
     
-
-
+//regvisit aga databaaasi-------------------------------------------------------------------------------------
 
 app.post("/regvisitdb", (req, res) => {
     let notice = "";
@@ -290,6 +406,75 @@ app.post("/regvisitdb", (req, res) => {
             }
         });
     }
+});
+
+
+//fotoupload --------------------------------------------------------------------------------------------------------
+app.get("/photoupload", (req, res) =>{
+    let notice = "";
+    res.render("photoupload", {notice: notice});
+});
+
+//req resi ees on vahevara milleks on see multer mis liigutab foto vahekausta ja votab sealt ja paneb oigesse kausta faili. Aga see fail on uue temp nimega mis on suvaline
+app.post("/photoupload", upload.single("photoInput"), (req, res) =>{
+    
+    console.log(req.body);
+    console.log(req.file);
+    let notice = "";
+    // genereeerime ise failinimee. Tegelikult reaalsuses peaksime ka kontrollima mida meile serverisse topitakse.
+    const fileName = "vp_" + Date.now() + ".jpeg";
+    //nimetame temp failnimega faili ymber
+    fs.rename(req.file.path, req.file.destination + fileName, (err) =>{
+        console.log(err);
+    });
+
+   
+   
+        if (!req.body.photoAltInput) {
+            notice = "Alt tekst j2i sisestamata!"
+            res.render("photoupload", {notice: notice});
+            console.log(notice);
+
+        } else {
+            let sqlRequest = "INSERT INTO photos (file_name, orig_name, alt_text, user_id, privacy) VALUES(?,?,?,?,?)"
+            const userId = 1;
+            connectionDatabase.query(sqlRequest, [fileName, req.file.originalname, req.body.photoAltInput, userId, req.body.privacyInput], (err, result)=>{
+             //arva arva mis siin toimub. P2ris programmis me peaks arvestama ka vaiksemate piltide ja igasuguste erijuhtudega 
+            sharp(req.file.destination + fileName).resize(480,720).jpeg({quality: 70}).toFile("./public/gallery/normal/" + fileName);
+            sharp(req.file.destination + fileName).resize(100,100).jpeg({quality: 50}).toFile("./public/gallery/thumbnail/" + fileName);
+             //talleteerime andmebaasi! Kysimargid seome kindlate vaartustega . ? definitsioon peab alati olema muutuja
+
+                if (err){
+                    throw err;
+                } else {
+                    notice = "Pilt on yles laetud!"
+                    res.render("photoupload", {notice: notice});
+                    }
+             });
+        }
+});
+
+//fotogaalleriii----------------------------------------------------------------------------------------------
+app.get("/photogallery", (req, res) => {
+    let photos = [];
+    let sqlRequest = "SELECT file_name, alt_text FROM photos WHERE privacy = ? AND deleted IS NULL ORDER BY id DESC";
+    const privacy = 3;
+
+    connectionDatabase.query(sqlRequest, [privacy], (err, sqlres) => {
+
+        if (err) {
+            throw err;
+
+        } else {
+
+            console.log(sqlres);
+            for (let i = 0; i < sqlres.length; i++) {
+                photos.push({file_name: "gallery/thumbnail/" + sqlres[i].file_name, alt_text: sqlres[i].photoAltInput_text}); 
+
+            }
+       res.render("photogallery", { photos: photos });
+        }      
+    });
 });
 
 app.listen(5101);

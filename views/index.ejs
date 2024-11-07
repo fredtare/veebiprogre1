@@ -23,6 +23,8 @@
     </center>
     <hr>
     <ul>
+      <li><a href="/register"> loo kasutajakonto</a></li>
+      <li><a href="/login"> Loginni Sisse</a></li>
       <li><a href="/timenow">Ajainfo</a></li>
       <li><a href="/vanasonad">Tanane vanasõna</a></li>
       <li><a href="/regvisit">Registreeri Oma külastus!!!</a></li>
@@ -30,12 +32,13 @@
       <li><a href="/visitlog">Külaliste Raamat!</a></li>
       <li><a href="/eestifilm">Eesti Film</a></li>
       <li><a href="/news">Värskeimad uudised ainult teile!!</a></li>
+      <li><a href="/photogallery">Kaege Yleslaetud fotosid!</a></li>
 
     </ul>
     <br>
 
     <h3>Uudis!</h3>
-    <% frontPageNews.forEach(function(news){ %>
+    <% locals.frontPageNews.forEach(function(news){ %>
       <li><h4><%= news.newsTitle %></h4><%= news.newsText%>, <br> Lisatud: <%= news.newsDate%></li><% }); %>
     <br>
 

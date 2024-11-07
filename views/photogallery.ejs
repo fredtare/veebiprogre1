@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#d8d1ab;">
+    <center>
+      <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
+      <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
+      <img src="banner/cat2.gif" alt="parem turva">
+      <br>
+      <h1> Terve interneti ametlik fotogalerii! </h1>
+      <hr>
+
+    </center>
+    <ul>
+      <li><a href="/">Avaleht</a></li>
+      <li><a href="/photoupload">Lae yles ka fotosid!!</a></li>
+    </ul>
+    <hr>
+
+    <h2>Veebisaidi fottokalleriiii!!!</h2>
+    <% photos.forEach(function(image){ %>
+      <img src="<%= image.file_name %>" alt="<%= image.alt_text%>">
+      <% }); %>
+ 
+
+
+  </body>
+
+</html>

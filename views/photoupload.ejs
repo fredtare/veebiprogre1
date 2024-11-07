@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+  <body style="background-color:#bfcdf5;">
+    <center>
+
+
+      <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
+      <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
+      <img src="banner/cat2.gif" alt="parem turva">
+      <br>
+      <img src="images/welcome.gif" alt="teretulemast saidile">
+      <h1>Sinu Enda Photoshop!!!</h1>
+      <p>See leht on loodud õppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
+        Digitehnoloogiate instituudis ja ei sisalda tõsiselt võetavat materjali.</p>
+
+      <hr>
+
+      </center>
+      <ul>
+        <li><a href="/">Avaleht</a></li>
+        <li><a href="/photogallery">Vaata ka fotosid!</a></li>
+      </ul>
+      <center>
+
+      <h2> Lisa foto! Ausalt ka l2heb galeriisse!</h2>
+      <hr>
+        <h3><%= notice %></h3>
+      <form method="POST" enctype="multipart/form-data"> <!--teeme formi millega saame kasutajad spinoneerida. Meetod post peidab vormi sisu ara URList ja lubab saata suuremaid faile. Vormi sees olevad asjad on seotud!-->
+
+        <label for="photoInput">Vali Fail!</label>
+        <input id="photoInput" name="photoInput" type="file">
+
+        <label for="photoAltInput">Pealkiri:</label>
+        <input type="text" id="photoAltInput" name="photoAltInput" placeholder ="Pane fotole pealkiri!">
+        <br>
+
+        <!-- raadionupud yhe vormi sees valistavad teised valikud!-->
+        <input type="radio" id="privacyInput1" name="privacyInput" value="1" checked>
+        <label for="privacyInput1">Privaatsus: Ainult Sinu Silmadele!</label>
+
+        <input type="radio" id="privacyInput2" name="privacyInput" value="2">
+        <label for="privacyInput2">Privaatsus: Ainult Teistele klubiliikmetele!!</label>
+
+        <input type="radio" id="privacyInput3" name="privacyInput" value="3">
+        <label for="privacyInput3">Privaatsus: Las siis koik juba naevad!</label>
+        <br>
+        <!--id PEAB olema unikaalne ja namega saame selle k2tte mujalt-->
+        <input type="submit" id="photoSubmit" name="photoSubmit" value="Laadi Veebi!">
+        
+      </form>
+      <hr>
+      </center>
+      </body>
+</html>

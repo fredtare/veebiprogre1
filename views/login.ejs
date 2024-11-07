@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#7dfddb;">
+    <center>
+      <img src="banner/cat1.gif" alt="vasak turva" style="width:220px;height:220px;">
+      <img src="banner/vp_banner_2024.png" alt="veebiprogrammeerimise 2024. aasta kursuse bÃ¤nner">
+      <img src="banner/cat2.gif" alt="parem turva">
+      <br>
+      <img src="images/welcome.gif" alt="teretulemast saidile">
+      <h1>Fredi Tarenõmm</h1>
+      <p>See leht on loodud õõppetöö raames <a href="https://www.tlu.ee" target="_blank">Tallinna Ülikoolis</a>,
+        Digitehnoloogiate instituudis ja ei sisalda tõsiselt võetavat materjali.</p>
+    </center>
+    <hr>
+    <form>
+    <b> Logi Sisse!
+      <br>
+        <label for="emailInput">E-mail </label>
+        <input type="email" id="emailInput" name="emailInput" placeholder="Sinu e-mail ....">
+        <br>
+        <label for="passwordInput">Salasõna </label>
+        <input type="password" id="passwordInput" name="passwordInput">
+        <br>
+        <input type="submit" id="userSubmit" name="userSubmit" value="Logi Inni">
+        <span> <%= locals.notice || "Voludemaa ootab teid!" %></span>
+      </form>
+    </b>
+    <hr>
+    <ul>
+      <li><a href="/register"> loo kasutajakonto</a></li>
+      <li><a href="/"> Avalehele</a></li>
+    </ul>
+    <br>
+  </body>
+
+</html>
