@@ -5,6 +5,9 @@
   <meta charset="utf-8">
   <title>Fredi Tarenõmm</title>
   <script src="class2.js" defer></script>
+  <link rel="stylesheet" href="/style/gallery.css">
+  <link rel="stylesheet" href="/style/modal.css">
+  <script src="/script/gallery.js" defer></script>
 </head>
 
 <body>
@@ -20,15 +23,32 @@
 
     </center>
     <ul>
-      <li><a href="/">Avaleht</a></li>
+      <li><a href="/home">Avaleht</a></li>
       <li><a href="/photoupload">Lae yles ka fotosid!!</a></li>
     </ul>
     <hr>
+    <dialog id="modal" class="modalarea">
+
+      <span id="modalClose" class="modalclose"> &times;</span>
+      <div class="modalhorizontal">
+        <div clas="modalvertical">
+          <p id="modalCaption"><%=photos.alt_text%></p>
+          <img id="modalImage" src="/pics/empty.jpg" alt="galeriipilt">
+
+        </div>
+      </div>
+
+    </dialog>
 
     <h2>Veebisaidi fottokalleriiii!!!</h2>
-    <% photos.forEach(function(image){ %>
-      <img src="<%= image.file_name %>" alt="<%= image.alt_text%>">
-      <% }); %>
+
+    <div id="gallery" class="gallery">
+      <% photos.forEach(function(image){ %>
+        <img src="<%= image.href %>" alt="<%= image.alt_text%>" class="thumbs" data-filename="<%=image.file_name%>">
+        <% }); %>
+    </div>
+
+
  
 
 

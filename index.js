@@ -13,8 +13,11 @@ const multer = require("multer");
 const sharp = require("sharp");
 //crypteerimine
 const bcrypt = require("bcrypt");
+//sessioni salvestamine
+const session = require("express-session");
 
-
+//app session sellega saab panna palju sessiooni parameetreid aga meie paneme kiired oppetoo omad ara
+app.use(session({secret: "frescoMagabKaua", saveUninitialized: true, resave: true}));
 app.set("view engine", "ejs"); //ejs kaivitub ise aga siin maarame viewengineks ejsi parast expressi appimist
 app.use(express.static("public"));//kaivitada func static expressi alt mis teeb kausta public kattesaadavaks
 app.use(bodyparser.urlencoded({extended: true})); // paringu URLi parsimine false kui ainult tekst true kui muud ka
@@ -32,6 +35,21 @@ const connectionDatabase = mysql.createConnection({
 
 }); 
    
+const checkLogin = function(req, res, next) {
+    if(req.session != 0) {
+        if(req.session.userId){
+            console.log("login kasutaja: " + req.session.userId);
+            next();
+        } else {
+            console.log("keegi ei olnud sisse loginud");
+            res.redirect("/login");
+        }
+    } else {
+        let notice = "Palun logi sisse et sinna ligi p22seda"
+        res.redirect("/login");
+        console.log("sessiooni ei dekteteeritud ")
+    }
+};
 
 //kirjeldame kodulehe ara
 app.get("/", (req, res) => {
@@ -56,6 +74,12 @@ app.get("/", (req, res) => {
 
 });
 
+app.get("/home", checkLogin, (req, res) => {
+    let notice = "Tere tulemast tagasi mr anderson!"
+    console.log("sees on kasutaja: " + req.session.userId);
+    res.render("home", {notice: notice});
+});
+
 app.get("/login" , (req, res) => {
     let notice = "";
     res.render("login", {notice:notice});
@@ -64,13 +88,14 @@ app.get("/login" , (req, res) => {
 //esilehe sisselogimine
 app.post("/login", (req,res) =>{
     let notice = "";
-
+    console.log(req.body);
     if (!req.body.emailInput || !req.body.passwordInput) {
         notice = "Midagi j2i sisestamata!";
         console.log("v2li jai tyhjaks");
         res.render("login", {notice: notice});
 
     } else {
+        //targem oleks esialgu parooli proovida ja siis edasi hakata vaatama muud infot turvalisuse eesm'rgil
         let sqlReq = "SELECT id, password FROM users WHERE email = ?";
         connectionDatabase.execute(sqlReq, [req.body.emailInput], (err, result) =>{
 
@@ -81,7 +106,7 @@ app.post("/login", (req,res) =>{
 
             } else {
                 if (result[0] != null) {//kuna saab mitu sama emaili olla siis votab ainult esimese vastuse et katsta nt "@gmail.com" sisselogimise vastu 
-                    bcrypt.compare.compare(req.body.passwordInput, result[0].password, (err, compareResult) =>{
+                    bcrypt.compare(req.body.passwordInput, result[0].password, (err, compareResult) =>{
 
                         if (err) {
                             notice = "tehniline viga, sisse logida ei saa"
@@ -90,7 +115,8 @@ app.post("/login", (req,res) =>{
                         } else {  //kas tuli oige v vale parool
                              if (compareResult) {
                                 notice = "Teretulemast! Olete Sisse Loginud!"
-                                res.render("login", {notice: notice});
+                                req.session.userId = result[0].id;
+                                res.redirect("/home");
 
                              } else {
                                 notice = "KT ja/voi parool vale!"
@@ -107,6 +133,13 @@ app.post("/login", (req,res) =>{
         });  //saadame emaili kontrolli
     } //valjad taidetud lopp
 
+});
+
+//logime v2lja
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    console.log("sess termineeritud");
+    res.redirect("/");
 });
 
 //regamise l6bud
@@ -316,7 +349,9 @@ app.post("/eestifilm/personsubmit", (req, res) => {
 
 app.get("/news", (req, res) => {
     let latestNews = [];
-    let sqlRequest = "SELECT news_title, news_text, news_date, expire_date FROM news WHERE expire_date >= (?) ORDER BY id DESC";
+    let sqlRequest = "SELECT news_title, news_text, news_date, expire_date, user_id, first_name, last_name FROM news INNER JOIN users ON news.user_id = users.id WHERE expire_date >= (?) ORDER BY news.id DESC";
+    //let sqlRequest = "SELECT news_title, news_text, news_date, expire_date, user_id FROM news WHERE expire_date >= (?) ORDER BY id DESC";
+    //see on tootav sqlrequest. kasuta h2dajuhtumitel
 
     connectionDatabase.query(sqlRequest, [dtEt.timeUnFormatted()], (err, sqlres) => {
 
@@ -325,7 +360,7 @@ app.get("/news", (req, res) => {
 
         } else {
             for (let i = 0; i < sqlres.length; i++) {
-                latestNews.push({ newsTitle: sqlres[i].news_title, newsText: sqlres[i].news_text, newsDate: dtEt.givenDateFormatted(sqlres[i].news_date) }); 
+                latestNews.push({ newsTitle: sqlres[i].news_title, newsText: sqlres[i].news_text, newsDate: dtEt.givenDateFormatted(sqlres[i].news_date), first_name: sqlres[i].first_name + " " + sqlres[i].last_name }); 
             }
        res.render("news", { latestNews: latestNews });
         }      
@@ -352,8 +387,8 @@ app.post("/news/addnews", (req, res) => {
         res.render("addnews", { notice: notice, newsTitleTemp: newsTitleTemp, newsTextTemp: newsTextTemp });
 
         if (!req.body.expireInput) {
-            let sqlRequest = "INSERT INTO news (news_title, news_text, expire_date, user_ID) values(?,?,?,1)";
-            connectionDatabase.query(sqlRequest, [req.body.newsTitleInput, req.body.newsInput, dtEt.defaultExpireDate()]), (err, sqlres) => {
+            let sqlRequest = "INSERT INTO news (news_title, news_text, expire_date, user_id) values(?,?,?,?)";
+            connectionDatabase.query(sqlRequest, [req.body.newsTitleInput, req.body.newsInput, dtEt.defaultExpireDate(), req.session.userId]), (err, sqlres) => {
                 if (err) {
                     throw err;
                 } else {
@@ -363,7 +398,7 @@ app.post("/news/addnews", (req, res) => {
                 }
             };
         } else {
-            let sqlRequest = "INSERT INTO news (news_title, news_text, expire_date, user_ID) VALUES(?,?,?,1)";
+            let sqlRequest = "INSERT INTO news (news_title, news_text, expire_date, user_id) VALUES(?,?,?,1)";
             connectionDatabase.query(sqlRequest, [req.body.newsTitleInput, req.body.newsInput, req.body.expireInput], (err, sqlres) => {
 
                 if (err) {
@@ -437,8 +472,7 @@ app.post("/photoupload", upload.single("photoInput"), (req, res) =>{
 
         } else {
             let sqlRequest = "INSERT INTO photos (file_name, orig_name, alt_text, user_id, privacy) VALUES(?,?,?,?,?)"
-            const userId = 1;
-            connectionDatabase.query(sqlRequest, [fileName, req.file.originalname, req.body.photoAltInput, userId, req.body.privacyInput], (err, result)=>{
+            connectionDatabase.query(sqlRequest, [fileName, req.file.originalname, req.body.photoAltInput, req.session.userId, req.body.privacyInput], (err, result)=>{
              //arva arva mis siin toimub. P2ris programmis me peaks arvestama ka vaiksemate piltide ja igasuguste erijuhtudega 
             sharp(req.file.destination + fileName).resize(480,720).jpeg({quality: 70}).toFile("./public/gallery/normal/" + fileName);
             sharp(req.file.destination + fileName).resize(100,100).jpeg({quality: 50}).toFile("./public/gallery/thumbnail/" + fileName);
@@ -469,7 +503,7 @@ app.get("/photogallery", (req, res) => {
 
             console.log(sqlres);
             for (let i = 0; i < sqlres.length; i++) {
-                photos.push({file_name: "gallery/thumbnail/" + sqlres[i].file_name, alt_text: sqlres[i].photoAltInput_text}); 
+                photos.push({file_name: sqlres[i].file_name, alt_text: sqlres[i].photoAltInput_text, href: "gallery/thumbnail/" + sqlres[i].file_name}); 
 
             }
        res.render("photogallery", { photos: photos });

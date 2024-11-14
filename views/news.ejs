@@ -20,14 +20,14 @@
 
     </center>
     <ul>
-      <li><a href="/">Avaleht</a></li>
+      <li><a href="/home">Avaleht</a></li>
       <li><a href="/news/addnews">Kas ka sul on mõni uudis!?</a></li>
     </ul>
     <hr>
 
     <h2>Värskeimad Uudised!</h2>
     <% latestNews.forEach(function(news){ %>
-      <li><h4><%= news.newsTitle %></h4> <%= news.newsText%>, <br> Lisatud: <%= news.newsDate%></li>
+      <li><h4><%= news.newsTitle %></h4> <h5><%= news.first_name%> </h5> <%= news.newsText%>, <br> Lisatud: <%= news.newsDate%></li>
       <% }); %>
 
 
