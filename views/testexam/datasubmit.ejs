@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#b47951;">
+  
+      <h1>Andmete Sisestus</h1>
+      <ul>
+        <li><a href="/"> Avalehele</a></li>
+        <li><a href="/summary"> Kokkuvõte </a></li>
+        <li><a href="/dataupdate"> mahalaadimisel olevad sõidukid </a></li>
+      </ul>
+    <hr>
+    <center>
+    <form method="post">
+    <h4>Sisesta Transpordisõiduki ja koorma andmed!</h4>
+      <br>
+        <label for="truckinput">Sõiduki numbrimärk</label>
+        <input type="input" id="truckInput" name="truckInput" placeholder="nr märk">
+        <br>
+        <label for="fullInput">Sõiduki Täismass </label>
+        <input type="input" id="fullInput" name="fullInput" placeholder="Täismass alates 100,000kg">
+        <br>
+        <label for="emptyInput">Sõiduki Tühimass </label>
+        <input type="input" id="emptyInput" name="emptyInput" placeholder="Tühimass kuni 1000kg">
+        <br>
+        <input type="submit" id="truckSubmit" name="truckSubmit" value="Kinnitan Andmete Õigsust">
+        <span> <%= locals.notice || "Ootan sisestust!" %></span>
+      </form>
+      </center>
+    </b>
+    <hr>
+  </body>
+
+</html>

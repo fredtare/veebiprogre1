@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body style="background-color:#b47951;">
+  
+      <h1>Andmete Sisestus</h1>
+      <ul>
+        <li><a href="/"> Avalehele</a></li>
+        <li><a href="/summary"> Kokkuvõte </a></li>
+        <li><a href="/dataentry"> sisesta andmeidz </a></li>
+      </ul>
+    <hr>
+
+    <br>
+
+    <h2>Mahalaadimisel Olevad Sõidukid</h2>
+      <form method="post">
+        <select id="loadedTrucks" name="loadedTrucks">
+          <option selected disabled>Vali sõiduk</option>
+          <% loadingList.forEach(function(vehicle) { %>
+            <option value="<%= vehicle.truck %>">
+              <%= vehicle.truck %> 
+            </option>
+          <% }); %>
+        </select>
+        <input type="number" id="updateWeight" name="updateWeight">
+        <input type="submit" id="weightSubmit">uuenda</button>
+      </form>
+  </body>
+
+</html>

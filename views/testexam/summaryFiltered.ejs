@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="et">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fredi Tarenõmm</title>
+  <script src="class2.js" defer></script>
+</head>
+
+<body>
+
+  <body>
+    <center>
+      <h1> Kokkuvõte</h1>
+      <hr>
+
+    </center>
+    <ul>
+      <li><a href="/">Avalehele</a></li>
+      <li><a href="/dataentry">Sisesta Andmeid</a></li>
+      <li><a href="/summary">Vali teine sõiduk</a></li>
+    </ul>
+    <hr>
+
+    <h2>Koormate kogumass</h2>
+    <%= totalWeight %>
+
+      <h2>Koormate logi</h2>
+        <% cargoList.forEach(function(item){ %>
+      <li><%= item.truck %> kaal sisse <%= item.weight_in%>, kaal v2lja: <%= item.weight_out%></li>
+      <% }); %>
+          
+      <hr>
+      <h3>Valitud Sõiduki <%= filteredList.truck%> Toodang</h3>
+      <% filteredList.forEach(function(item){ %>
+        <li>kaal sisse <%= item.weight_in%>, kaal v2lja: <%= item.weight_out%></li>
+        <% }); %>
+  </body>
+
+</html>
